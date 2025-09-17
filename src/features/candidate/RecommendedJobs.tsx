@@ -2,6 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, DollarSign, Bookmark } from "lucide-react";
+import { ApplicationFormFormik } from "./applicationForm";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const recommendedJobs = [
   {
@@ -40,67 +43,89 @@ const recommendedJobs = [
 ];
 
 export const RecommendedJobs = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState("");
+
+  const handleApplyClick = (jobTitle: string) => {
+    setSelectedJob(jobTitle);
+    setIsFormOpen(true);
+  };
+
+  const handleFormClose = () => {
+    setIsFormOpen(false);
+    setSelectedJob("");
+  };
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          Recommended Jobs
-          <Button variant="ghost" size="sm">
-            View All
-          </Button>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {recommendedJobs.map((job) => (
-          <div
-            key={job.id}
-            className="border rounded-lg p-4 hover:shadow-sm transition-shadow"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className="space-y-1">
-                <h3 className="font-semibold text-lg">{job.title}</h3>
-                <p className="text-muted-foreground">{job.company}</p>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            Recommended Jobs
+            <Button variant="ghost" size="sm">
+              View All
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {recommendedJobs.map((job) => (
+            <div
+              key={job.id}
+              className="border rounded-lg p-4 hover:shadow-sm transition-shadow"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className="space-y-1">
+                  <Link to={`/jobs/${job.id}`} className="hover:underline">
+                    <h3 className="font-semibold text-lg">{job.title}</h3>
+                  </Link>
+                  <p className="text-muted-foreground">{job.company}</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Badge variant="secondary" className="bg-accent/10 text-accent">
+                    {job.match}% match
+                  </Badge>
+                  <Button variant="ghost" size="icon">
+                    <Bookmark className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="bg-accent/10 text-accent">
-                  {job.match}% match
-                </Badge>
-                <Button variant="ghost" size="icon">
-                  <Bookmark className="w-4 h-4" />
+
+              <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-3">
+                <div className="flex items-center space-x-1">
+                  <MapPin className="w-4 h-4" />
+                  <span>{job.location}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Clock className="w-4 h-4" />
+                  <span>{job.posted}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <DollarSign className="w-4 h-4" />
+                  <span>{job.salary}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex flex-wrap gap-2">
+                  {job.skills.map((skill) => (
+                    <Badge key={skill} variant="outline" className="text-xs">
+                      {skill}
+                    </Badge>
+                  ))}
+                </div>
+                <Button size="sm" className="bg-primary hover:bg-primary/90" onClick={() => handleApplyClick(job.title)}>
+                  Apply Now
                 </Button>
               </div>
             </div>
-
-            <div className="flex items-center space-x-4 text-sm text-muted-foreground mb-3">
-              <div className="flex items-center space-x-1">
-                <MapPin className="w-4 h-4" />
-                <span>{job.location}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Clock className="w-4 h-4" />
-                <span>{job.posted}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <DollarSign className="w-4 h-4" />
-                <span>{job.salary}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex flex-wrap gap-2">
-                {job.skills.map((skill) => (
-                  <Badge key={skill} variant="outline" className="text-xs">
-                    {skill}
-                  </Badge>
-                ))}
-              </div>
-              <Button size="sm" className="bg-primary hover:bg-primary/90">
-                Apply Now
-              </Button>
-            </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+          ))}
+        </CardContent>
+      </Card>
+      <ApplicationFormFormik
+        isOpen={isFormOpen}
+        onClose={handleFormClose}
+        jobTitle={selectedJob}
+      />
+    </>
   );
 };
