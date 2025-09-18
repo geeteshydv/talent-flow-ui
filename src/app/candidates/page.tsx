@@ -9,8 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { HRDashboardHeader } from "@/components/hr-dashboard-header"
 import { Search, Filter, Star, MessageSquare, Calendar, Download, Eye } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
-export default function CandidatesPage() {
+export default function HRCandidatesPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [positionFilter, setPositionFilter] = useState("all")
@@ -114,6 +115,7 @@ export default function CandidatesPage() {
     return matchesSearch && matchesStatus && matchesPosition
   })
 
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background">
       <HRDashboardHeader />
@@ -259,7 +261,7 @@ export default function CandidatesPage() {
                     )}
 
                     <div className="flex items-center gap-3 pt-2">
-                      <Button size="sm" className="gap-2">
+                      <Button size="sm" className="gap-2" onClick={() => navigate('/hr/viewProfile')}>
                         <Eye className="w-4 h-4" />
                         View Full Profile
                       </Button>

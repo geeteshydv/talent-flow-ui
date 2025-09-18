@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button"
 import { Bell, Search, Settings, User } from "lucide-react"
+import { useNavigate } from "react-router-dom";
 
 export function HRDashboardHeader() {
+  const navigate = useNavigate();
   return (
     <header className="border-b bg-card">
       <div className="container mx-auto px-4 py-4">
@@ -16,13 +18,33 @@ export function HRDashboardHeader() {
             </div>
 
             <nav className="hidden md:flex items-center gap-6">
-              <Button variant="ghost" className="text-primary font-medium">
+              <Button variant="ghost" className="text-primary font-medium" onClick={() => navigate('/hr')}>
                 Dashboard
+                            </Button>
+              <Button 
+                variant="ghost"
+                onClick={() => navigate('/hr/jobs')}
+              >
+                Jobs
               </Button>
-              <Button variant="ghost">Jobs</Button>
-              <Button variant="ghost">Candidates</Button>
-              <Button variant="ghost">Interviews</Button>
-              <Button variant="ghost">Reports</Button>
+              <Button 
+                variant="ghost"
+                onClick={() => navigate('/hr/candidates')}
+              >
+                Candidates
+              </Button>
+              <Button 
+                variant="ghost"
+                onClick={() => navigate('/hr/interviews')}
+              >
+                Interviews
+              </Button>
+              <Button 
+                variant="ghost"
+                onClick={() => navigate('/hr/reports')}
+              >
+                Reports
+              </Button>
             </nav>
           </div>
 

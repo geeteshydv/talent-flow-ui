@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { HRDashboardHeader } from "@/components/hr-dashboard-header"
 import { Plus, Search, Filter, Eye, Edit, Trash2, Users } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 export default function JobsPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -99,6 +100,7 @@ export default function JobsPage() {
     return matchesSearch && matchesStatus
   })
 
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background">
       <HRDashboardHeader />
@@ -110,7 +112,8 @@ export default function JobsPage() {
             <h1 className="text-3xl font-bold">Job Management</h1>
             <p className="text-muted-foreground">Create and manage job postings</p>
           </div>
-          <Button className="gap-2">
+          <Button className="gap-2"
+          onClick={() => navigate('/hr/newjob')}>
             <Plus className="w-4 h-4" />
             Post New Job
           </Button>
@@ -121,6 +124,7 @@ export default function JobsPage() {
           <CardContent className="pt-6">
             <div className="flex gap-4">
               <div className="flex-1 relative">
+                <div>
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder="Search jobs by title or department..."
@@ -128,6 +132,7 @@ export default function JobsPage() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"
                 />
+                </div>
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[180px]">

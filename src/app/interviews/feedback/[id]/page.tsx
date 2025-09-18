@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { HRDashboardHeader } from "@/components/hr-dashboard-header"
 import { ArrowLeft, Star, Save, Send } from "lucide-react"
+import { Textarea } from "@/components/ui/textArea"
+import { RadioGroup,RadioGroupItem } from "@/components/ui/radio-group"
+import { useNavigate } from "react-router-dom"
 
 export default function InterviewFeedbackPage() {
   const [rating, setRating] = useState("")
@@ -45,7 +46,7 @@ export default function InterviewFeedbackPage() {
     updated[index].rating = rating
     setCriteriaRatings(updated)
   }
-
+  const navigate=useNavigate();
   return (
     <div className="min-h-screen bg-background">
       <HRDashboardHeader />
@@ -53,7 +54,7 @@ export default function InterviewFeedbackPage() {
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/hr/interviews')}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div>

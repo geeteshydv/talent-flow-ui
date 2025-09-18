@@ -8,9 +8,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { HRDashboardHeader } from "@/components/hr-dashboard-header"
 import { Calendar, Clock, Video, MapPin, Plus, Filter, Users, MessageSquare } from "lucide-react"
+import { useNavigate } from "react-router-dom"
+import { LocationModal } from "./LocationModal"
+import { RescheduleModal } from "./RescheduleModal"
+import { CancelDialog } from "./CancelDialog"
 
 export default function InterviewsPage() {
-  const [viewMode, setViewMode] = useState("upcoming")
+  const [viewMode, setViewMode] = useState("all")
   const [filterBy, setFilterBy] = useState("all")
 
   const interviews = [
@@ -113,34 +117,38 @@ export default function InterviewsPage() {
     if (viewMode === "today") return interview.date === "2024-01-20"
     return true
   })
-
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-background">
       <HRDashboardHeader />
 
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">Interview Management</h1>
-            <p className="text-muted-foreground">Schedule and track candidate interviews</p>
+        <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-primary/10 via-primary/5 to-background p-8 mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold">Interview Management</h1>
+              <p className="text-muted-foreground mt-2">Schedule and track candidate interviews</p>
+            </div>
+            <Button className="gap-2 bg-primary hover:bg-primary/90">
+              <Plus className="w-4 h-4" />
+              Schedule Interview
+            </Button>
           </div>
-          <Button className="gap-2">
-            <Plus className="w-4 h-4" />
-            Schedule Interview
-          </Button>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card>
+          <Card className="hover:shadow-md transition-all">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">Today's Interviews</p>
-                  <p className="text-2xl font-bold">3</p>
+                  <p className="text-2xl font-bold text-primary">3</p>
                 </div>
-                <Calendar className="w-8 h-8 text-chart-1" />
+                <div className="p-3 bg-primary/10 rounded-full">
+                  <Calendar className="w-6 h-6 text-primary" />
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -180,11 +188,12 @@ export default function InterviewsPage() {
         </div>
 
         {/* Filters */}
-        <Card>
+        <Card className="border-2 border-muted">
           <CardContent className="pt-6">
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
               <Select value={viewMode} onValueChange={setViewMode}>
-                <SelectTrigger className="w-[180px]">
+                <SelectTrigger className="w-[200px] bg-background">
+                  <Calendar className="w-4 h-4 mr-2 text-primary" />
                   <SelectValue placeholder="View mode" />
                 </SelectTrigger>
                 <SelectContent>
@@ -195,8 +204,8 @@ export default function InterviewsPage() {
                 </SelectContent>
               </Select>
               <Select value={filterBy} onValueChange={setFilterBy}>
-                <SelectTrigger className="w-[180px]">
-                  <Filter className="w-4 h-4 mr-2" />
+                <SelectTrigger className="w-[200px] bg-background">
+                  <Filter className="w-4 h-4 mr-2 text-primary" />
                   <SelectValue placeholder="Filter by round" />
                 </SelectTrigger>
                 <SelectContent>
@@ -207,6 +216,11 @@ export default function InterviewsPage() {
                   <SelectItem value="final">Final Round</SelectItem>
                 </SelectContent>
               </Select>
+
+              <Button variant="outline" className="ml-auto">
+                <Filter className="w-4 h-4 mr-2" />
+                Clear Filters
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -295,32 +309,58 @@ export default function InterviewsPage() {
 
                     <div className="flex items-center gap-3 pt-2">
                       {interview.status === "Scheduled" && (
+                        // <>
+                        //   {interview.type === "Video Call" ? (
+                        //     <Button
+                        //       size="sm"
+                        //       className="gap-2"
+                        //       onClick={() => navigate(`/interviews/call/${interview.id}`)}
+                        //     >
+                        //       <Video className="w-4 h-4" />
+                        //       Join Call
+                        //     </Button>
+                        //   ) : (
+                        //     <Button size="sm" className="gap-2">
+                        //       <MapPin className="w-4 h-4" />
+                        //       View Location
+                        //     </Button>
+                        //   )}
+                        //   <Button variant="outline" size="sm" className="bg-transparent">
+                        //     Reschedule
+                        //   </Button>
+                        //   <Button variant="outline" size="sm" className="bg-transparent">
+                        //     Cancel
+                        //   </Button>
+                        // </>
                         <>
                           {interview.type === "Video Call" ? (
-                            <Button size="sm" className="gap-2">
-                              <Video className="w-4 h-4" />
+                            <Button size="sm" onClick={() => navigate(`/interviews/call/${interview.id}`)}>
                               Join Call
                             </Button>
                           ) : (
-                            <Button size="sm" className="gap-2">
-                              <MapPin className="w-4 h-4" />
-                              View Location
-                            </Button>
+                            <LocationModal location={interview.location || "Conference Room"} />
                           )}
-                          <Button variant="outline" size="sm" className="bg-transparent">
-                            Reschedule
-                          </Button>
-                          <Button variant="outline" size="sm" className="bg-transparent">
-                            Cancel
-                          </Button>
+                          <RescheduleModal interviewId={interview.id} />
+                          <CancelDialog interviewId={interview.id} />
                         </>
                       )}
                       {interview.status === "Completed" && (
-                        <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+                        <Button variant="outline" size="sm" className="gap-2 bg-transparent" onClick={() => navigate(`/interviews/feedback`)}>
+                          <MessageSquare className="w-4 h-4" />
+                          Give Feedback
+                        </Button>
+                      )}
+                      {/* {interview.status === "Completed" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-2 bg-transparent"
+                          onClick={() => navigate(`/interviews/feedback/${interview.id}`)}
+                        >
                           <MessageSquare className="w-4 h-4" />
                           View Feedback
                         </Button>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>
@@ -330,9 +370,13 @@ export default function InterviewsPage() {
         </div>
 
         {filteredInterviews.length === 0 && (
-          <Card>
-            <CardContent className="pt-6 text-center py-12">
+          <Card className="border-2 border-dashed">
+            <CardContent className="py-12 text-center">
+              <Calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
               <p className="text-muted-foreground">No interviews found for the selected criteria.</p>
+              <Button variant="outline" className="mt-4">
+                Schedule New Interview
+              </Button>
             </CardContent>
           </Card>
         )}

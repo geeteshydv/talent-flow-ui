@@ -5,11 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { HRDashboardHeader } from "@/components/hr-dashboard-header"
 import { ArrowLeft, Save, Eye } from "lucide-react"
+import { Textarea } from "@/components/ui/textArea"
+import { useNavigate } from "react-router-dom"
 
 export default function NewJobPage() {
   const [formData, setFormData] = useState({
@@ -29,7 +30,7 @@ export default function NewJobPage() {
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
-
+  const navigate=useNavigate();
   return (
     <div className="min-h-screen bg-background">
       <HRDashboardHeader />
@@ -37,7 +38,7 @@ export default function NewJobPage() {
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Header */}
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon">
+          <Button variant="ghost" size="icon" onClick={() => navigate('/hr/jobs')}>
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div>
