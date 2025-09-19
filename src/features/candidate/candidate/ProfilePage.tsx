@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Mail, Phone, MapPin, Briefcase, GraduationCap, Edit } from "lucide-react";
 import { useState } from "react";
 import { EditProfileForm } from "./EditProfileForm";
+import CandidateFeedbackList from "./CandidateFeedbackList";
+import { mockCandidateFeedbacks } from "./mockCandidateFeedbacks";
 
 const userProfile = {
     name: "Sarah Johnson",
@@ -66,7 +68,7 @@ export default function ProfilePage() {
                 </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Left Column */}
                 <div className="lg:col-span-2 space-y-8">
                     {/* About Me */}
@@ -135,6 +137,11 @@ export default function ProfilePage() {
                 onClose={() => setIsEditOpen(false)}
                 profile={userProfile}
             />
+
+            
+            {/* Candidate Feedbacks from HRs */}
+            <CandidateFeedbackList feedbacks={mockCandidateFeedbacks.filter(fb => fb.candidateId === "c123")} />
+            
         </div>
     );
 }

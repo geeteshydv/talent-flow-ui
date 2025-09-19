@@ -1,9 +1,7 @@
 import "./App.css";
 import { LandingPage } from "@/features/home/LandingPage";
 import { Routes, Route } from "react-router-dom";
-import { CandidatePage } from "@/features/candidate/CandidatePage";
 import HRDashboard from "./app/page";
-import ProfilePage from "./features/candidate/ProfilePage";
 import { JobDetailsPage } from "./features/hr/JobDetailsPage";
 import JobsPage from "./app/jobs/page";
 import InterviewsPage from "./app/interviews/page";
@@ -15,6 +13,11 @@ import InterviewFeedbackPage from "./app/interviews/feedback/[id]/page";
 import { VideoCallPage } from "./app/interviews/VideoCallPage";
 import { SignInPage } from "./features/Authentication/SignInPage";
 import { SignUpPage } from "./features/Authentication/SignUpPage";
+import { CandidatePage } from "./features/candidate/candidate/CandidatePage";
+import { UserProfileProvider } from "./features/candidate/candidate/UserProfileContext";
+import { ProfileCompletionProvider } from "./features/candidate/candidate/ProfileCompletionContext";
+import CompleteProfilePage from "./features/candidate/candidate/CompleteProfilePage";
+import ProfilePage from "./features/candidate/candidate/ProfilePage";
 
 
 function App() {
@@ -25,6 +28,19 @@ function App() {
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/" element={<LandingPage />} />
         <Route path="/candidate" element={<CandidatePage />} />
+        <Route
+          path="/candidate/*"
+          element={
+            <UserProfileProvider>
+              <ProfileCompletionProvider>
+                <Routes>
+                  <Route path="" element={<CandidatePage />} />
+                  <Route path="complete-profile" element={<CompleteProfilePage />} />
+                </Routes>
+              </ProfileCompletionProvider>
+            </UserProfileProvider>
+          }
+        />
         <Route path="candidates/profile" element={<ProfilePage />} />
         <Route path="/hr" element={<HRDashboard />} />
         <Route path="/jobs/:id" element={<JobDetailsPage />} />
